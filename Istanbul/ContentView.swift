@@ -1,4 +1,5 @@
 import SwiftUI
+import AVFoundation
 
 private let warmOrange = Color(red: 0.93, green: 0.55, blue: 0.17)
 
@@ -64,7 +65,8 @@ struct ContentView: View {
     // MARK: - Now Playing
 
     private func nowPlaying(_ sound: BBCSound) -> some View {
-        HStack(spacing: 12) {
+        @Bindable var sm = soundManager
+        return HStack(spacing: 12) {
             ZStack {
                 Circle()
                     .fill(warmOrange.opacity(0.15))
@@ -89,6 +91,41 @@ struct ContentView: View {
             }
 
             Spacer()
+
+            HStack(spacing: 10) {
+                Button {
+                    sm.isLooping.toggle()
+                    if let player = Mirror(reflecting: sm).descendant("player") as? AVAudioPlayer {
+                        player.numberOfLoops = sm.isLooping ? -1 : 0
+                    }
+                } label: {
+                    ZStack {
+                        Circle()
+                            .fill(Color.primary.opacity(sm.isLooping ? 0.18 : 0.08))
+                            .frame(width: 24, height: 24)
+                        Image(systemName: sm.isLooping ? "repeat.1" : "repeat")
+                            .font(.system(size: 11, weight: .semibold))
+                            .foregroundStyle(sm.isLooping ? warmOrange : .secondary)
+                    }
+                }
+                .buttonStyle(.plain)
+                .help(sm.isLooping ? "Turn loop off" : "Turn loop on")
+
+                Button {
+                    sm.isAutoAdvance.toggle()
+                } label: {
+                    ZStack {
+                        Circle()
+                            .fill(Color.primary.opacity(sm.isAutoAdvance ? 0.18 : 0.08))
+                            .frame(width: 24, height: 24)
+                        Image(systemName: sm.isAutoAdvance ? "forward.end.fill" : "forward.end")
+                            .font(.system(size: 11, weight: .semibold))
+                            .foregroundStyle(sm.isAutoAdvance ? warmOrange : .secondary)
+                    }
+                }
+                .buttonStyle(.plain)
+                .help(sm.isAutoAdvance ? "Turn auto-advance off" : "Turn auto-advance on")
+            }
 
             Button {
                 withAnimation(.spring(duration: 0.25)) {
