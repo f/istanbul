@@ -32,7 +32,6 @@ private func iconForSound(_ sound: BBCSound) -> String {
 
 struct ContentView: View {
     @Environment(SoundManager.self) private var soundManager
-    @Environment(\.openWindow) private var openWindow
 
     var body: some View {
         VStack(spacing: 0) {
@@ -207,7 +206,7 @@ struct ContentView: View {
     private var footer: some View {
         HStack {
             Button {
-                openWindow(id: "about")
+                AboutWindowController.shared.showWindow()
             } label: {
                 HStack(spacing: 3) {
                     Image(systemName: "info.circle").font(.system(size: 9))
@@ -300,14 +299,44 @@ struct SoundRow: View {
     }
 }
 
+// MARK: - About Window Controller
+
+final class AboutWindowController {
+    static let shared = AboutWindowController()
+    private var window: NSWindow?
+
+    func showWindow() {
+        if let existing = window, existing.isVisible {
+            existing.makeKeyAndOrderFront(nil)
+            NSApp.activate(ignoringOtherApps: true)
+            return
+        }
+
+        let aboutView = AboutView {
+            self.window?.close()
+            self.window = nil
+        }
+
+        let hostingView = NSHostingController(rootView: aboutView)
+        let win = NSWindow(contentViewController: hostingView)
+        win.title = "About Istanbul"
+        win.styleMask = [.titled, .closable]
+        win.isReleasedWhenClosed = false
+        win.center()
+        win.makeKeyAndOrderFront(nil)
+        NSApp.activate(ignoringOtherApps: true)
+        window = win
+    }
+}
+
 // MARK: - About View
 
 struct AboutView: View {
-    @Environment(\.dismiss) private var dismiss
+    var onDismiss: () -> Void = {}
 
     var body: some View {
         VStack(spacing: 0) {
-            ScrollView {
+            ScrollView(showsIndicators: false) {
                 VStack(spacing: 0) {
                     Spacer().frame(height: 24)
 
@@ -374,7 +403,7 @@ struct AboutView: View {
             HStack {
                 Spacer()
                 Button("Done") {
-                    dismiss()
+                    onDismiss()
                 }
                 .keyboardShortcut(.defaultAction)
             }

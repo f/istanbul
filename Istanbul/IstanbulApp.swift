@@ -13,11 +13,5 @@ struct IstanbulApp: App {
                 .renderingMode(.template)
         }
         .menuBarExtraStyle(.window)
-
-        Window("About Istanbul", id: "about") {
-            AboutView()
-        }
-        .windowResizability(.contentSize)
-        .defaultPosition(.center)
     }
 }
