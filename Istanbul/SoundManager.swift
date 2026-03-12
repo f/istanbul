@@ -29,13 +29,15 @@ struct BBCSound: Identifiable {
 }
 
 @Observable
-final class SoundManager {
+final class SoundManager: NSObject, AVAudioPlayerDelegate {
     var sounds: [BBCSound] = []
     var isLoading = false
     var currentSound: BBCSound?
     var downloading: String?
     var volume: Float = 0.7
     var errorMessage: String?
+    var isLooping = false
+    var isAutoAdvance = false
 
     private var player: AVAudioPlayer?
 
@@ -102,7 +104,8 @@ final class SoundManager {
 
         do {
             let p = try AVAudioPlayer(contentsOf: localURL)
-            p.numberOfLoops = -1
+            p.delegate = self
+            p.numberOfLoops = isLooping ? -1 : 0
             p.volume = volume
             p.play()
             player = p
@@ -128,5 +131,33 @@ final class SoundManager {
         let soundsDir = cacheDir.appendingPathComponent("IstanbulSounds")
         try? FileManager.default.createDirectory(at: soundsDir, withIntermediateDirectories: true)
         return soundsDir.appendingPathComponent("\(sound.id).mp3")
+    }
+
+    // MARK: - AVAudioPlayerDelegate
+
+    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        // If looping is enabled, AVAudioPlayer won't call this because it loops internally.
+        // Handle automatic advance when a sound finishes.
+        guard isAutoAdvance,
+              let current = currentSound,
+              let index = sounds.firstIndex(where: { $0.id == current.id }) else {
+            if !isLooping {
+                self.player = nil
+                currentSound = nil
+            }
+            return
+        }
+
+        let nextIndex = sounds.index(after: index)
+        guard nextIndex < sounds.count else {
+            self.player = nil
+            currentSound = nil
+            return
+        }
+
+        let nextSound = sounds[nextIndex]
+        Task { [weak self] in
+            await self?.play(nextSound)
+        }
     }
 }
