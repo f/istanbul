@@ -307,64 +307,67 @@ struct AboutView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            Spacer().frame(height: 32)
+            ScrollView {
+                VStack(spacing: 0) {
+                    Spacer().frame(height: 24)
 
-            Image("TrayIcon")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 64, height: 64)
-                .opacity(0.8)
+                    Image("TrayIcon")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 48, height: 48)
+                        .opacity(0.8)
 
-            Spacer().frame(height: 16)
+                    Spacer().frame(height: 10)
 
-            Text("Istanbul")
-                .font(.system(size: 24, weight: .bold, design: .rounded))
+                    Text("Istanbul")
+                        .font(.system(size: 18, weight: .bold, design: .rounded))
 
-            Text("Ambient Soundscapes")
-                .font(.system(size: 14))
-                .foregroundStyle(.secondary)
-                .padding(.top, 2)
+                    Text("Ambient Soundscapes")
+                        .font(.system(size: 11))
+                        .foregroundStyle(.secondary)
+                        .padding(.top, 1)
 
-            Text("Version 1.0")
-                .font(.system(size: 11, weight: .medium))
-                .foregroundStyle(.tertiary)
-                .padding(.horizontal, 10)
-                .padding(.vertical, 3)
-                .background(Capsule().fill(.quaternary))
-                .padding(.top, 8)
+                    Text("Version 1.0")
+                        .font(.system(size: 9, weight: .medium))
+                        .foregroundStyle(.tertiary)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 2)
+                        .background(Capsule().fill(.quaternary))
+                        .padding(.top, 6)
 
-            Spacer().frame(height: 24)
-            Rectangle().fill(.quaternary).frame(height: 0.5).padding(.horizontal, 24)
-            Spacer().frame(height: 24)
+                    Spacer().frame(height: 16)
+                    Rectangle().fill(.quaternary).frame(height: 0.5).padding(.horizontal, 20)
+                    Spacer().frame(height: 16)
 
-            VStack(alignment: .leading, spacing: 20) {
-                aboutSection(
-                    icon: "waveform",
-                    title: "Sound Source",
-                    text: "All ambient sounds are sourced from the BBC Rewind Sound Effects library, recorded on location in Istanbul, Turkey.",
-                    credit: "bbc.co.uk – © copyright 2026 BBC",
-                    link: ("Browse BBC Sound Effects", URL(string: "https://sound-effects.bbcrewind.co.uk")!)
-                )
+                    VStack(alignment: .leading, spacing: 14) {
+                        aboutSection(
+                            icon: "waveform",
+                            title: "Sound Source",
+                            text: "All ambient sounds are sourced from the BBC Rewind Sound Effects library, recorded on location in Istanbul, Turkey.",
+                            credit: "bbc.co.uk – © copyright 2026 BBC",
+                            link: ("Browse BBC Sound Effects", URL(string: "https://sound-effects.bbcrewind.co.uk")!)
+                        )
 
-                aboutSection(
-                    icon: "lock.open",
-                    title: "Open Source",
-                    text: "Istanbul is free and open source software. Contributions, issues, and feedback are welcome on GitHub.",
-                    credit: nil,
-                    link: ("View on GitHub", URL(string: "https://github.com/f/istanbul")!)
-                )
+                        aboutSection(
+                            icon: "lock.open",
+                            title: "Open Source",
+                            text: "Istanbul is free and open source software. Contributions, issues, and feedback are welcome on GitHub.",
+                            credit: nil,
+                            link: ("View on GitHub", URL(string: "https://github.com/f/istanbul")!)
+                        )
 
-                aboutSection(
-                    icon: "doc.text",
-                    title: "License",
-                    text: "BBC sound effects are provided under the RemArc licence for personal, educational, and research use. This app is non-commercial and ad-free.",
-                    credit: nil,
-                    link: ("Read RemArc Licence", URL(string: "https://sound-effects.bbcrewind.co.uk/licensing")!)
-                )
+                        aboutSection(
+                            icon: "doc.text",
+                            title: "License",
+                            text: "BBC sound effects are provided under the RemArc licence for personal, educational, and research use. This app is non-commercial and ad-free.",
+                            credit: nil,
+                            link: ("Read RemArc Licence", URL(string: "https://sound-effects.bbcrewind.co.uk/licensing")!)
+                        )
+                    }
+                    .padding(.horizontal, 24)
+                    .padding(.bottom, 16)
+                }
             }
-            .padding(.horizontal, 32)
-
-            Spacer()
 
             Rectangle().fill(.quaternary).frame(height: 0.5)
 
@@ -374,49 +377,46 @@ struct AboutView: View {
                     dismiss()
                 }
                 .keyboardShortcut(.defaultAction)
-                .controlSize(.large)
             }
-            .padding(.horizontal, 24)
-            .padding(.vertical, 14)
+            .padding(.horizontal, 20)
+            .padding(.vertical, 10)
         }
-        .frame(width: 440, height: 520)
+        .frame(width: 360, height: 400)
     }
 
     private func aboutSection(icon: String, title: String, text: String, credit: String?, link: (String, URL)) -> some View {
-        HStack(alignment: .top, spacing: 14) {
+        HStack(alignment: .top, spacing: 10) {
             Image(systemName: icon)
-                .font(.system(size: 14))
+                .font(.system(size: 11))
                 .foregroundStyle(warmOrange)
-                .frame(width: 24, alignment: .center)
-                .padding(.top, 2)
+                .frame(width: 18, alignment: .center)
+                .padding(.top, 1)
 
-            VStack(alignment: .leading, spacing: 6) {
+            VStack(alignment: .leading, spacing: 4) {
                 Text(title)
-                    .font(.system(size: 14, weight: .semibold))
+                    .font(.system(size: 11, weight: .semibold))
 
                 Text(text)
-                    .font(.system(size: 13))
+                    .font(.system(size: 10.5))
                     .foregroundStyle(.secondary)
-                    .lineSpacing(3)
+                    .lineSpacing(2)
                     .fixedSize(horizontal: false, vertical: true)
 
                 if let credit {
                     Text(credit)
-                        .font(.system(size: 11))
+                        .font(.system(size: 9.5))
                         .foregroundStyle(.tertiary)
-                        .padding(.top, 1)
                 }
 
                 Link(destination: link.1) {
-                    HStack(spacing: 4) {
+                    HStack(spacing: 3) {
                         Text(link.0)
                         Image(systemName: "arrow.up.right")
-                            .font(.system(size: 9))
+                            .font(.system(size: 7))
                     }
-                    .font(.system(size: 12, weight: .medium))
+                    .font(.system(size: 10, weight: .medium))
                     .foregroundStyle(warmOrange)
                 }
-                .padding(.top, 1)
             }
         }
     }
