@@ -12,7 +12,7 @@
 <p align="center">
   <a href="https://github.com/f/istanbul/releases/latest"><img src="https://img.shields.io/github/v/release/f/istanbul?style=flat-square&color=e88c2a" alt="Latest Release"></a>
   <a href="https://github.com/f/istanbul/blob/main/LICENSE"><img src="https://img.shields.io/github/license/f/istanbul?style=flat-square" alt="License"></a>
-  <img src="https://img.shields.io/badge/platform-macOS%2015%2B-blue?style=flat-square" alt="Platform">
+  <img src="https://img.shields.io/badge/platform-macOS%2014%2B-blue?style=flat-square" alt="Platform">
 </p>
 
 ---
@@ -72,7 +72,7 @@ Sounds download as MP3 on first play and are cached locally for offline use.
 
 ## Building from Source
 
-Requires macOS 15+ and Xcode 26+.
+Requires macOS 14+ (Sonoma) and Xcode 16+.
 
 ```bash
 git clone https://github.com/f/istanbul.git
